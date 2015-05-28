@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ws="http://www.mulesoft.org/schema/mule/ws" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:quartz="http://www.mulesoft.org/schema/mule/quartz" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.6.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/quartz http://www.mulesoft.org/schema/mule/quartz/current/mule-quartz.xsd
+http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/current/mule-ws.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+    <ws:consumer-config name="Web_Service_Consumer" wsdlLocation="http://www.webservicex.net/currencyconvertor.asmx?wsdl" service="CurrencyConvertor" port="CurrencyConvertorSoap" serviceAddress="http://www.webservicex.net/currencyconvertor.asmx" doc:name="Web Service Consumer"/>
+    <data-mapper:config name="Pojo_To_Xml_ConversionRate_" transformationGraphPath="pojo_to_xml_conversionrate_.grf" doc:name="Pojo_To_Xml_ConversionRate_"/>
+    <data-mapper:config name="Xml_ConversionRateResponse__To_Pojo" transformationGraphPath="xml_conversionrateresponse__to_pojo.grf" doc:name="Xml_ConversionRateResponse__To_Pojo"/>
+    <flow name="webservice-consumerFlow">
+        <quartz:inbound-endpoint jobName="Quartz-Consumer" repeatInterval="1000" repeatCount="0" responseTimeout="10000" doc:name="Quartz">
+            <quartz:event-generator-job/>
+        </quartz:inbound-endpoint>
+        <data-mapper:transform config-ref="Pojo_To_Xml_ConversionRate_" doc:name="Pojo To Xml&lt;ConversionRate&gt;"/>
+        <ws:consumer config-ref="Web_Service_Consumer" operation="ConversionRate" doc:name="Web Service Consumer"/>
+        <data-mapper:transform config-ref="Xml_ConversionRateResponse__To_Pojo" doc:name="Xml&lt;ConversionRateResponse&gt; To Pojo"/>
+        <logger message="Quantas Dilmas vale um Obama? #[payload]" level="INFO" doc:name="Logger"/>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <logger message="Caiu no erro #[payload]" level="INFO" doc:name="Logger"/>
+        </catch-exception-strategy>
+    </flow>
+</mule>

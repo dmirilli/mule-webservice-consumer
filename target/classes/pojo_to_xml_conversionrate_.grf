@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph __version="3.5.0" author="daniel" created="Wed May 13 18:57:39 BRT 2015" description="Pojo To Xml&lt;ConversionRate&gt;" guiVersion="3.4.4.P" id="1431567850283" licenseCode="Unlicensed" licenseType="Unknown" modified="Wed May 13 18:57:39 BRT 2015" modifiedBy="daniel" name="Pojo_To_Xml_ConversionRate_" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{http://www.webserviceX.NET/=ns0}/ns0:ConversionRate" _dataStructure="OBJECT" _id="__id" _type="Output" id="9fa55441-858b-444c-9edf-d9134eb3010a">
+<Record fieldDelimiter="," name="ConversionRate" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __implementationClass="java.lang.String" __index="0" __sourcePath="{http://www.webserviceX.NET/=ns0}/ns0:ConversionRate/ns0:FromCurrency" containerType="SINGLE" label="ns0:FromCurrency" name="ns0_FromCurrency" type="string"/>
+<Field __implementationClass="java.lang.String" __index="1" __sourcePath="{http://www.webserviceX.NET/=ns0}/ns0:ConversionRate/ns0:ToCurrency" containerType="SINGLE" label="ns0:ToCurrency" name="ns0_ToCurrency" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Input" id="d4461f48-d500-4c9e-9c65-9c10f110b978">
+<Record fieldDelimiter="," name="String" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/object/text()" containerType="SINGLE" label="text()" name="text" type="string"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" fileURL="dict:inputPayload" guiName="Pojo READER" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context outPort="0" sequenceField="__id" xpath=".">
+  <Mapping cloverField="text" trim="true" xpath="."/>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[JAVA]]></attr>
+<attr name="schema"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><schema-object>
+  <typed-object-ref type-ref="java.lang.String"/>
+  <typed-object type="java.lang.String"/>
+</schema-object>
+]]></attr>
+</Node>
+<Node enabled="enabled" fileURL="dict:outputPayload" guiName="XML WRITER" guiX="900" guiY="20" id="EXT_XML_WRITER0" type="EXT_XML_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<clover:element clover:name="ns0:ConversionRate" xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" xmlns:ns0="http://www.webserviceX.NET/" clover:inPort="0">
+  <clover:element clover:name="ns0:FromCurrency">$0.ns0_FromCurrency</clover:element>
+  <clover:element clover:name="ns0:ToCurrency">$0.ns0_ToCurrency</clover:element>
+</clover:element>]]></attr>
+<attr name="_data_format"><![CDATA[XML]]></attr>
+<attr name="__metadata"><![CDATA[true]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'object' -&gt; 'ns0:ConversionRate'" guiX="460" guiY="20" id="FOREACH_OBJECT_NS0_CONVERSION_RATE" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+output.ns0_FromCurrency = 'USD';
+output.ns0_ToCurrency = 'BRL';]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="BEAN_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="d4461f48-d500-4c9e-9c65-9c10f110b978" outPort="Port 0 (out)" toNode="FOREACH_OBJECT_NS0_CONVERSION_RATE:0"/>
+<Edge debugMode="true" fromNode="FOREACH_OBJECT_NS0_CONVERSION_RATE:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="9fa55441-858b-444c-9edf-d9134eb3010a" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:0"/>
+</Phase>
+</Graph>
